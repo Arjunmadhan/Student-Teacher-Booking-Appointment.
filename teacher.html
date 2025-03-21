@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+       /* Updated Global Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #f0f4ff, #e6e9f2); /* Soft gradient background */
+    color: #2d3748; /* Dark gray for text */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 2rem;
+}
+
+/* Glassmorphism Card */
+.card {
+    width: 100%;
+    margin-bottom: 2rem;
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+    backdrop-filter: blur(10px); /* Blur effect */
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Light border */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 1.5rem;
+    background: rgba(109, 40, 217, 0.1); /* Light purple header */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Light border */
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #4a5568; /* Dark gray for titles */
+}
+
+.card-content {
+    padding: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #4a5568; /* Dark gray for labels */
+}
+
+input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid rgba(109, 40, 217, 0.2); /* Light purple border */
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+    color: #2d3748; /* Dark gray for text */
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus {
+    outline: none;
+    border-color: rgba(109, 40, 217, 0.5); /* Light purple border on focus */
+    box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.1); /* Subtle focus effect */
+}
+
+button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    font-size: 1rem;
+}
+
+button.primary {
+    background: #6d28d9; /* Solid purple */
+    color: white;
+}
+
+button.primary:hover {
+    background: #5b21b6; /* Darker purple on hover */
+    transform: translateY(-2px);
+}
+
+button.destructive {
+    background: #ef4444; /* Solid red */
+    color: white;
+}
+
+button.destructive:hover {
+    background: #dc2626; /* Darker red on hover */
+    transform: translateY(-2px);
+}
+
+button.success {
+    background: #22c55e; /* Solid green */
+    color: white;
+}
+
+button.success:hover {
+    background: #16a34a; /* Darker green on hover */
+    transform: translateY(-2px);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.table th,
+.table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(109, 40, 217, 0.1); /* Light purple border */
+    color: #4a5568; /* Dark gray for text */
+}
+
+.table th {
+    font-weight: 600;
+    background: rgba(109, 40, 217, 0.05); /* Light purple header */
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.flex {
+    display: flex;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.mb-8 {
+    margin-bottom: 2rem;
+}
+
+.text-2xl {
+    font-size: 1.5rem;
+}
+
+.font-bold {
+    font-weight: 600;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .card {
+        margin-bottom: 1rem;
+    }
+
+    .card-header {
+        padding: 1rem;
+    }
+
+    .card-content {
+        padding: 1rem;
+    }
+
+    .table th,
+    .table td {
+        padding: 0.75rem;
+    }
+
+    button {
+        padding: 0.5rem 1rem;
+    }
+
+    .text-2xl {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-title {
+        font-size: 1.25rem;
+    }
+
+    .table th,
+    .table td {
+        padding: 0.5rem;
+    }
+
+    .actions {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Card -->
+        <div id="loginCard" class="card">
+            <div class="card-header">
+                <h2 class="card-title">Teacher Login</h2>
+            </div>
+            <div class="card-content">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <button type="submit" class="primary">Login</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="hidden">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-bold">Teacher Dashboard</h2>
+                <button class="destructive" id="logoutBtn">Logout</button>
+            </div>
+
+            <!-- Schedule Appointment Card -->
+            <div class="card mb-8">
+                <div class="card-header">
+                    <h2 class="card-title">Schedule Appointment</h2>
+                </div>
+                <div class="card-content">
+                    <div class="form-group">
+                        <label for="student">Student Name</label>
+                        <input type="text" id="student" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="time">Time</label>
+                        <input type="time" id="time" required>
+                    </div>
+                    <button class="primary" id="scheduleBtn">Schedule Appointment</button>
+                </div>
+            </div>
+
+            <!-- Manage Appointments Card -->
+            <div class="card mb-8">
+                <div class="card-header">
+                    <h2 class="card-title">Manage Appointments</h2>
+                </div>
+                <div class="card-content">
+                    <table class="table" id="appointmentsTable">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Appointments will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- View Messages Card -->
+            <div class="card mb-8">
+                <div class="card-header">
+                    <h2 class="card-title">View Messages</h2>
+                </div>
+                <div class="card-content">
+                    <table class="table" id="messagesTable">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Message</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Messages will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- All Appointments Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">All Appointments</h2>
+                </div>
+                <div class="card-content">
+                    <table class="table" id="allAppointmentsTable">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- All appointments will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAMLNRWLEvFzLTVDRooQ0cFky1pl5VbSHw",
+            authDomain: "student-app-e7025.firebaseapp.com",
+            projectId: "student-app-e7025",
+            storageBucket: "student-app-e7025.firebasestorage.app",
+            messagingSenderId: "312008380132",
+            appId: "1:312008380132:web:df1ae4074e0ab8d04da6f1",
+            measurementId: "G-0X93M2LKQ3"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // DOM Elements
+        const loginCard = document.getElementById('loginCard');
+        const dashboard = document.getElementById('dashboard');
+        const loginForm = document.getElementById('loginForm');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const scheduleBtn = document.getElementById('scheduleBtn');
+        const appointmentsTableBody = document.querySelector('#appointmentsTable tbody');
+        const messagesTableBody = document.querySelector('#messagesTable tbody');
+        const allAppointmentsTableBody = document.querySelector('#allAppointmentsTable tbody');
+        const studentInput = document.getElementById('student');
+        const dateInput = document.getElementById('date');
+        const timeInput = document.getElementById('time');
+
+        // Load Appointments from Firestore
+        function loadAppointments() {
+            onSnapshot(collection(db, 'appointments'), (snapshot) => {
+                appointmentsTableBody.innerHTML = '';
+                allAppointmentsTableBody.innerHTML = '';
+                snapshot.forEach((doc) => {
+                    const appointment = doc.data();
+                    const row = `
+                        <tr>
+                            <td>${appointment.student}</td>
+                            <td>${appointment.date}</td>
+                            <td>${appointment.time}</td>
+                            <td>${appointment.approved ? 'Approved' : 'Pending'}</td>
+                            <td class="actions">
+                                ${!appointment.approved ? `
+                                    <button class="success" onclick="approveAppointment('${doc.id}')">
+                                        <i data-lucide="check" class="w-4 h-4"></i>
+                                    </button>
+                                ` : ''}
+                                <button class="destructive" onclick="cancelAppointment('${doc.id}')">
+                                    <i data-lucide="x" class="w-4 h-4"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    appointmentsTableBody.innerHTML += row;
+                    allAppointmentsTableBody.innerHTML += row.replace(/<td class="actions">.*<\/td>/, '');
+                });
+                lucide.createIcons(); // Refresh icons
+            });
+        }
+
+        // Load Messages from Firestore
+        function loadMessages() {
+            onSnapshot(collection(db, 'messages'), (snapshot) => {
+                messagesTableBody.innerHTML = '';
+                snapshot.forEach((doc) => {
+                    const message = doc.data();
+                    messagesTableBody.innerHTML += `
+                        <tr>
+                            <td>${message.student}</td>
+                            <td>${message.message}</td>
+                        </tr>
+                    `;
+                });
+            });
+        }
+
+        // Schedule Appointment
+        scheduleBtn.addEventListener('click', async () => {
+            const student = studentInput.value.trim();
+            const date = dateInput.value.trim();
+            const time = timeInput.value.trim();
+
+            if (student && date && time) {
+                try {
+                    await addDoc(collection(db, 'appointments'), {
+                        student,
+                        date,
+                        time,
+                        approved: false,
+                    });
+                    studentInput.value = '';
+                    dateInput.value = '';
+                    timeInput.value = '';
+                } catch (error) {
+                    console.error('Error scheduling appointment: ', error);
+                }
+            } else {
+                alert('Please fill out all fields.');
+            }
+        });
+
+        // Approve Appointment
+        async function approveAppointment(id) {
+            try {
+                await updateDoc(doc(db, 'appointments', id), { approved: true });
+            } catch (error) {
+                console.error('Error approving appointment: ', error);
+            }
+        }
+
+        // Cancel Appointment
+        async function cancelAppointment(id) {
+            try {
+                await deleteDoc(doc(db, 'appointments', id));
+            } catch (error) {
+                console.error('Error canceling appointment: ', error);
+            }
+        }
+
+        // Event Listeners
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            console.log('Login:', { email, password });
+            loginCard.classList.add('hidden');
+            dashboard.classList.remove('hidden');
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            loginCard.classList.remove('hidden');
+            dashboard.classList.add('hidden');
+        });
+
+        // Initial Load
+        loadAppointments();
+        loadMessages();
+    </script>
+</body>
+</html>
