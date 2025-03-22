@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Booking</title>
     <style>
-   /* Global Styles */
+
 body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(to right, #dfe9f3, #ffffff);
@@ -79,7 +79,6 @@ button:hover {
     background: rgba(255, 255, 255, 0.8);
 }
 
-/* Search Teacher View */
 .teacher-list {
     max-height: 200px;
     overflow-y: auto;
@@ -103,21 +102,19 @@ button:hover {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Book Appointment View */
 .selected-teacher {
     font-weight: bold;
     color: #333;
     margin-bottom: 10px;
 }
 
-/* Send Message View */
 textarea {
     resize: none;
 }
 
     </style>
     <script type="module">
-        // Import Firebase SDK
+     
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
@@ -137,16 +134,15 @@ textarea {
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let selectedTeacher = null; // Store the selected teacher
+        let selectedTeacher = null;
 
-        // Check if the user is already logged in
         auth.onAuthStateChanged((user) => {
             if (user) {
-                // User is logged in, show the search teacher view
+               
                 switchView("search-teacher");
                 searchTeacher();
             } else {
-                // User is not logged in, show the login view
+                
                 switchView("login");
             }
         });
@@ -157,7 +153,6 @@ textarea {
             if (targetView) {
                 targetView.classList.add("active");
 
-                // Update the selected teacher display if applicable
                 if (view === "book-appointment" || view === "send-message") {
                     const selectedTeacherElement = document.getElementById("selected-teacher");
                     if (selectedTeacherElement && selectedTeacher) {
@@ -194,11 +189,11 @@ textarea {
             
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // Signed up
+                   
                     const user = userCredential.user;
                     alert("Registration successful!");
-                    switchView("search-teacher"); // Switch to the search teacher view
-                    searchTeacher(); // Fetch and display teachers
+                    switchView("search-teacher"); 
+                    searchTeacher(); 
                 })
                 .catch((error) => {
                     const errorCode = error.code;
@@ -209,12 +204,12 @@ textarea {
 
         window.searchTeacher = async function() {
             try {
-                // Fetch teachers from Firestore
+
                 const querySnapshot = await getDocs(collection(db, "teachers"));
 
                 const teachers = [];
                 querySnapshot.forEach((doc) => {
-                    if (doc.data().name) { // Ensure the document has a 'name' field
+                    if (doc.data().name) { 
                         teachers.push({ id: doc.id, ...doc.data() });
                     }
                 });
@@ -224,26 +219,25 @@ textarea {
                     return;
                 }
 
-                // Display teachers in the UI
                 const teacherList = document.getElementById("teachers-list");
                 if (!teacherList) {
                     console.error("Element with id 'teachers-list' not found.");
                     return;
                 }
 
-                teacherList.innerHTML = ""; // Clear the list
+                teacherList.innerHTML = ""; 
                 teachers.forEach((teacher) => {
                     const teacherItem = document.createElement("div");
                     teacherItem.className = "teacher-item";
                     teacherItem.innerText = teacher.name;
                     teacherItem.onclick = () => {
-                        selectedTeacher = teacher; // Set the selected teacher
-                        switchView("book-appointment"); // Switch to the book appointment view
+                        selectedTeacher = teacher; 
+                        switchView("book-appointment"); 
                     };
                     teacherList.appendChild(teacherItem);
                 });
 
-                switchView("search-teacher"); // Switch to the search teacher view
+                switchView("search-teacher"); 
             } catch (error) {
                 console.error("Error fetching teachers:", error);
                 alert("Error fetching teachers. Please try again.");
@@ -262,7 +256,7 @@ textarea {
                     time
                 });
                 alert("Appointment booked successfully!");
-                switchView("send-message"); // Switch to the send message view
+                switchView("send-message"); 
             } catch (error) {
                 alert("Error booking appointment: " + error.message);
             }
@@ -277,28 +271,26 @@ textarea {
                     message,
                     sender: auth.currentUser.email,
                     timestamp: new Date(),
-                    teacher: selectedTeacher.name // Associate the message with the selected teacher
+                    teacher: selectedTeacher.name 
                 });
                 alert("Message sent successfully!");
-                switchView("search-teacher"); // Switch back to the search teacher view
+                switchView("search-teacher"); 
             } catch (error) {
                 alert("Error sending message: " + error.message);
             }
         };
 
-        // Logout functionality
         window.handleLogout = function() {
             signOut(auth)
                 .then(() => {
                     alert("Logged out successfully!");
-                    switchView("login"); // Redirect to the login view
+                    switchView("login"); 
                 })
                 .catch((error) => {
                     alert("Error logging out: " + error.message);
                 });
         };
 
-        // Add search functionality
         window.filterTeachers = function() {
             const searchTerm = document.getElementById("search-box").value.toLowerCase();
             const teacherItems = document.querySelectorAll(".teacher-item");
@@ -314,7 +306,7 @@ textarea {
     </script>
 </head>
 <body>
-    <!-- Register View -->
+
     <div id="register" class="container">
         <div class="title">Register</div>
         <input type="email" id="register-email" placeholder="Email">
@@ -323,7 +315,6 @@ textarea {
         <button class="secondary" onclick="switchView('login')">Login</button>
     </div>
 
-    <!-- Login View -->
     <div id="login" class="container active">
         <div class="title">Login</div>
         <input type="email" id="login-email" placeholder="Email">
@@ -332,7 +323,6 @@ textarea {
         <button class="secondary" onclick="switchView('register')">Register</button>
     </div>
 
-    <!-- Search Teacher View -->
     <div id="search-teacher" class="container">
         <div class="title">Search Teacher</div>
         <input type="text" id="search-box" placeholder="Search for a teacher..." oninput="filterTeachers()">
@@ -342,7 +332,6 @@ textarea {
         <button class="secondary" onclick="handleLogout()">Logout</button>
     </div>
 
-    <!-- Book Appointment View -->
     <div id="book-appointment" class="container">
         <div class="title">Book Appointment</div>
         <div id="selected-teacher" class="selected-teacher"></div>
@@ -352,7 +341,7 @@ textarea {
         <button class="secondary" onclick="switchView('search-teacher')">Back to Search</button>
     </div>
 
-    <!-- Send Message View -->
+
     <div id="send-message" class="container">
         <div class="title">Send Message</div>
         <div id="selected-teacher" class="selected-teacher"></div>
