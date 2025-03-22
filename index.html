@@ -6,7 +6,7 @@
     <title>Auth Page</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Global Styles */
+
         body {
             margin: 0;
             padding: 0;
@@ -24,8 +24,6 @@
             max-width: 400px;
             padding: 2rem;
         }
-
-        /* White Glassmorphism Card */
         .auth-box {
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(15px);
@@ -120,7 +118,6 @@
             display: none;
         }
 
-        /* Role Select Styling */
         select {
             appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234a5568' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e");
@@ -129,7 +126,6 @@
             background-size: 1rem;
         }
 
-        /* Responsive Design */
         @media (max-width: 480px) {
             .auth-box {
                 padding: 1.5rem;
@@ -185,7 +181,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 
-        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAMLNRWLEvFzLTVDRooQ0cFky1pl5VbSHw",
             authDomain: "student-app-e7025.firebaseapp.com",
@@ -208,7 +203,6 @@
             role: 'admin'
         };
 
-        // DOM Elements
         const formTitle = document.getElementById('formTitle');
         const authForm = document.getElementById('authForm');
         const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
@@ -217,10 +211,9 @@
         const submitButton = authForm.querySelector('button[type="submit"]');
         const roleSelect = document.getElementById('role');
 
-        // Initialize Lucide icons
+  
         lucide.createIcons();
 
-        // Event Listeners
         authForm.addEventListener('submit', handleSubmit);
         toggleButton.addEventListener('click', handleToggle);
         authForm.addEventListener('input', handleFormInput);
@@ -231,7 +224,6 @@
             submitButton.textContent = isLogin ? 'Login' : 'Register';
             confirmPasswordGroup.classList.toggle('hidden', isLogin);
 
-            // Add or remove the 'required' attribute based on the form mode
             if (isLogin) {
                 confirmPasswordInput.removeAttribute('required');
             } else {
@@ -241,14 +233,12 @@
             toggleButton.textContent = isLogin 
                 ? "Don't have an account? Register" 
                 : "Already have an account? Login";
-            
-            // Reset form data
+      
             formData.email = '';
             formData.password = '';
             formData.confirmPassword = '';
             formData.role = 'admin';
-            
-            // Reset form inputs
+         
             authForm.reset();
             roleSelect.value = 'admin';
         }
@@ -260,23 +250,23 @@
 
         async function handleSubmit(e) {
             e.preventDefault();
-            console.log('Form submitted'); // Debugging log
+            console.log('Form submitted'); 
 
             const { email, password, confirmPassword, role } = formData;
 
             if (isLogin) {
-                // Login
+
                 try {
                     const userCredential = await signInWithEmailAndPassword(auth, email, password);
                     console.log('Login successful:', userCredential.user);
                     alert('Login successful!');
-                    redirectBasedOnRole(role); // Redirect only after successful login
+                    redirectBasedOnRole(role); 
                 } catch (error) {
                     console.error('Login error:', error.message);
                     alert(`Login failed: ${error.message}`);
                 }
             } else {
-                // Register
+
                 if (password !== confirmPassword) {
                     alert('Passwords do not match');
                     return;
@@ -285,7 +275,7 @@
                     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                     console.log('Registration successful:', userCredential.user);
                     alert('Registration successful!');
-                    redirectBasedOnRole(role); // Redirect only after successful registration
+                    redirectBasedOnRole(role); 
                 } catch (error) {
                     console.error('Registration error:', error.message);
                     alert(`Registration failed: ${error.message}`);
@@ -296,13 +286,13 @@
         function redirectBasedOnRole(role) {
             switch (role) {
                 case 'admin':
-                    window.location.href = 'admin.html'; // Redirect to admin page
+                    window.location.href = 'admin.html'; 
                     break;
                 case 'teacher':
-                    window.location.href = 'teacher.html'; // Redirect to teacher page
+                    window.location.href = 'teacher.html'; 
                     break;
                 case 'student':
-                    window.location.href = 'student.html'; // Redirect to student page
+                    window.location.href = 'student.html'; 
                     break;
                 default:
                     alert('Invalid role selected');
